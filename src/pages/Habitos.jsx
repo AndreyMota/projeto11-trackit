@@ -101,7 +101,7 @@ export default function Habitos() {
             <Conte>
                 <div className="sup">
                     <h1>Meus hábitos</h1>
-                    <button disabled={oncad} onClick={temCad}>+</button>
+                    <button data-test="habit-create-btn" disabled={oncad} onClick={temCad}>+</button>
                 </div>
                 {oncad &&
                 <Formi set={setOncad} titulo={titulo} setTitulo={setTitulo} opcoes={opcoes} setOpcoes={setOpcoes} load={load} enviaHab={enviaHab}/>
@@ -109,17 +109,17 @@ export default function Habitos() {
                 {(hab.length > 0)? 
                     hab.map((x, y) => {
                         return (
-                            <div className="hab">
+                            <div data-test="habit-container" className="hab">
                                 <div className="left">
-                                    <h2>{x.name}</h2>
+                                    <h2 data-test="habit-name">{x.name}</h2>
                                     <div className="dias">
-                                        <Dia primary={(x.days[y] === 0) ? false : true}>S</Dia>
-                                        <Dia primary={(x.days[y] === 1) ? false : true}>T</Dia>
-                                        <Dia primary={(x.days[y] === 2) ? false : true}>Q</Dia>
-                                        <Dia primary={(x.days[y] === 3) ? false : true}>Q</Dia>
-                                        <Dia primary={(x.days[y] === 4) ? false : true}>S</Dia>
-                                        <Dia primary={(x.days[y] === 5) ? false : true}>S</Dia>
-                                        <Dia primary={(x.days[y] === 6) ? false : true}>D</Dia>
+                                        <div className="dia" data-test="habit-day" primary={(x.days[y] === 0) ? false : true}>S</div>
+                                        <div className="dia" data-test="habit-day" primary={(x.days[y] === 1) ? false : true}>T</div>
+                                        <div className="dia" data-test="habit-day" primary={(x.days[y] === 2) ? false : true}>Q</div>
+                                        <div className="dia" data-test="habit-day" primary={(x.days[y] === 3) ? false : true}>Q</div>
+                                        <div className="dia" data-test="habit-day" primary={(x.days[y] === 4) ? false : true}>S</div>
+                                        <div className="dia" data-test="habit-day" primary={(x.days[y] === 5) ? false : true}>S</div>
+                                        <div className="dia" data-test="habit-day" primary={(x.days[y] === 6) ? false : true}>D</div>
                                     </div>
                                 </div>
                                 {/* <button onClick={() => excluir(x.id)}>Excluir</button> */}
@@ -190,17 +190,20 @@ const Conte = styled.div`
 `
 
 const Dia = styled.div`
-    margin-right: 3px;
-    font-family: 'Lexend Deca';
-    font-weight: 400;
-    font-size: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 30px;
-    height: 30px;
-    background-color: ${props => props.primary? '#FFFFFF' : '#CFCFCF'};
-    color: ${props => props.primary? '#DBDBDB' : '#FFFFFF'};
+    .dia {
+        margin-right: 3px;
+        font-family: 'Lexend Deca';
+        font-weight: 400;
+        font-size: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 30px;
+        height: 30px;
+        background-color: ${props => props.primary? '#FFFFFF' : '#CFCFCF'};
+        color: ${props => props.primary? '#DBDBDB' : '#FFFFFF'};
+    }
+    
 `
 
 

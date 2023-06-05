@@ -2,12 +2,12 @@ import styled from "styled-components"
 
 export default function Top({ rcs }) {
     return (
-        <>  
+        <header data-test="header">  
             <Tup>
                 <p>TrackIt</p>
-                <Perfil src={rcs}/>
+                <img data-test="avatar" src={rcs} alt="" />
             </Tup>
-        </>
+        </header>
         
     )
 }
@@ -33,13 +33,18 @@ const Tup = styled.div`
     }
     img {
         margin-right: 18px;
+        width: 51px;
+        height: 51px;
+    
+
+        border-radius: 98.5px;
     }
 `;
 
-const Perfil = styled.img`
+/* const Perfil = styled.img`
     width: 51px;
     height: 51px;
     
 
     border-radius: 98.5px;
-`;
+`; */

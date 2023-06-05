@@ -67,20 +67,22 @@ export default function Hoje() {
         <>
             <Top rcs={user.image}/>
             <Conte>
-                <h1>{custoDate.format('dddd')}, {custoDate.date()}</h1>
+                <h1 data-test="today">{custoDate.format('dddd')}, {custoDate.date()}</h1>
                 {(hab.length > 0)? 
                     hab.map((x, y) => {
                         return (
                             <Hab>
-                                <div className="left">
-                                    <p>{x.name}</p>
-                                    Sua sequencia atual: {x.currentSequence} <br />
-                                    Seu recorde: {x.highestSequence}
+                                <div data-test="today-habit-container">
+                                    <div className="left">
+                                        <p data-test="today-habit-name" >{x.name}</p>
+                                        <p data-test="today-habit-sequence" >Sua sequencia atual: {x.currentSequence}</p> <br />
+                                        <p data-test="today-habit-record">Seu recorde: {x.highestSequence}</p>
+                                    </div>
                                 </div>
                             </Hab>
                         )
                     }) 
-                :  <h2>Nenhum hábito concluído ainda</h2>}
+                :  <h2 data-test="today-counter">Nenhum hábito concluído ainda</h2>}
                 
             </Conte>
             <Menu perc={pcem}/>

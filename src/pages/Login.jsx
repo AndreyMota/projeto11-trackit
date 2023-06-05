@@ -63,11 +63,11 @@ export default function Login() {
                 <label>Email:</label>
                 <input  data-test="email-input" disabled={load} value={email} onChange={alteraEmail} type="text" />
                 <label>Senha:</label>
-                <input disabled={load} value={senha} onChange={alteraSenha} type="text" />
-                {load ? <button disabled={load}><ThreeDots/></button> : <button>Login</button>}
+                <input data-test="password-input" disabled={load} value={senha} onChange={alteraSenha} type="text" />
+                {load ? <button disabled={load}><ThreeDots/></button> : <button data-test="login-btn" >Login</button>}
             </form>
             <p>Ainda não tem cadastro?</p>
-            <button onClick={cadGo}>Cadastrar-se</button>
+            <button data-test="signup-link" onClick={cadGo}>Cadastrar-se</button>
         </>
     )
 }

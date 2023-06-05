@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import { ThreeDots } from "react-loader-spinner";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Cadastro() {
     const [email, setEmail] = useState('');
@@ -61,24 +61,25 @@ export default function Cadastro() {
                 <Campos>
                     <Campo>
                         <label htmlFor="">email</label> <br />
-                        <input onChange={(event) => handleForm(event, setEmail)} disabled={load} value={email} type="email" />
+                        <input data-test="email-input" onChange={(event) => handleForm(event, setEmail)} disabled={load} value={email} type="email" />
                     </Campo>
                     <Campo>
                         <label htmlFor="">nome</label> <br />
-                        <input onChange={(event) => handleForm(event, setNome)} disabled={load} value={nome} type="text" />
+                        <input data-test="user-name-input" onChange={(event) => handleForm(event, setNome)} disabled={load} value={nome} type="text" />
                     </Campo>
                     <Campo>
                         <label htmlFor="">foto de perfil</label> <br />
-                        <input onChange={(event) => handleForm(event, setImage)} disabled={load} value={image} type="text" />
+                        <input data-test="user-image-input" onChange={(event) => handleForm(event, setImage)} disabled={load} value={image} type="text" />
                     </Campo>
                     <Campo>
                         <label htmlFor="">senha</label> <br />
-                        <input onChange={(event) => handleForm(event, setPass)} disabled={load} value={pass} type="password" />
+                        <input data-test="password-input" onChange={(event) => handleForm(event, setPass)} disabled={load} value={pass} type="password" />
                     </Campo>
                 </Campos>
-                {load ? <button disabled={load}><ThreeDots/></button> : <button>Cadastrar</button>}
+                {load ? <button disabled={load}><ThreeDots/></button> : <button data-test="signup-btn">Cadastrar</button>}
                 
             </form>
+            <Link to={'/'}> <p data-test="login-link">login</p> </Link>
         </>
     )
 }
