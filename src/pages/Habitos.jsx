@@ -5,17 +5,24 @@ import { AuthContext } from "./Contexts/AuthContext";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Formi from "./comp/Formi";
 
 export default function Habitos() {
-    const [token, setToken] = useState();
+    const [config, setToken] = useState();
     const [hab, setHab] = useState();
+    const [oncad, setOncad] = useState(false);
+    const [load, setLoad] = useState(false);
+
+    const [titulo, setTitulo] = useState('');
+    const [opcoes, setOpcoes] = useState([]);
+
     const {user} = useContext(AuthContext);
     const navigate = useNavigate();
     
 
     useEffect(() => {
         if (!user) {
-            navigate('/');
+            return;
         } else {
             setToken({
                 headers: {
@@ -24,11 +31,11 @@ export default function Habitos() {
             });
         }
         
-    }, [user, navigate]);
+    }, [user]);
     
 
     useEffect(() => {
-        axios.get('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits', token)
+        axios.get('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits', config)
             .then((resp) => {
                 console.log(resp.data);
                 setHab(resp.data);
@@ -36,9 +43,9 @@ export default function Habitos() {
             .catch((er) => {
                 console.log(er);
             });
-    }, [token]);
+    }, [config]);
 
-    if (!user) {
+    if (!user || !hab) {
         return (
             <>
                 Oops
@@ -46,15 +53,79 @@ export default function Habitos() {
         )
     }
 
+    const temCad = () => {
+        setOncad(!oncad);
+        console.log(!oncad);
+    }
+
+    const enviaHab = async (event) => {
+        event.preventDefault();
+        setLoad(true);
+        if (opcoes.length > 0 && titulo !== '') {
+          const body = {
+            name: titulo,
+            days: opcoes
+          };
+      
+          try {
+            await axios.post('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits', body, config);
+            setOpcoes([]);
+            setTitulo('');
+            setLoad(false);
+            setOncad(false);
+            console.log('Hábito cadastrado com sucesso');
+          } catch (error) {
+                alert('Deu ruim meu paceiro: ' + error);
+                setLoad(false);
+          }
+        }
+      };
+
+
+      const excluir = (id) => {
+        useEffect(() => {
+            axios.delete(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}`, config)
+                .then((resp) => {
+                    console.log(resp);
+                }) 
+                .catch((er) => {
+                    console.log(er);
+                });
+        }, []);
+      };
+      
+
     return (
         <>
             <Top rcs={user.image}/>
             <Conte>
                 <div className="sup">
-                    <h1>Hábitos</h1><button>+</button>
+                    <h1>Meus hábitos</h1>
+                    <button disabled={oncad} onClick={temCad}>+</button>
                 </div>
+                {oncad &&
+                <Formi set={setOncad} titulo={titulo} setTitulo={setTitulo} opcoes={opcoes} setOpcoes={setOpcoes} load={load} enviaHab={enviaHab}/>
+                }
                 {(hab.length > 0)? 
-                    hab.map(() => {
+                    hab.map((x, y) => {
+                        return (
+                            <div className="hab">
+                                <div className="left">
+                                    <h2>{x.name}</h2>
+                                    <div className="dias">
+                                        <Dia primary={(x.days[y] === 0) ? false : true}>S</Dia>
+                                        <Dia primary={(x.days[y] === 1) ? false : true}>T</Dia>
+                                        <Dia primary={(x.days[y] === 2) ? false : true}>Q</Dia>
+                                        <Dia primary={(x.days[y] === 3) ? false : true}>Q</Dia>
+                                        <Dia primary={(x.days[y] === 4) ? false : true}>S</Dia>
+                                        <Dia primary={(x.days[y] === 5) ? false : true}>S</Dia>
+                                        <Dia primary={(x.days[y] === 6) ? false : true}>D</Dia>
+                                    </div>
+                                </div>
+                                {/* <button onClick={() => excluir(x.id)}>Excluir</button> */}
+                                <ExcluirButton id={x.id}/>
+                            </div>
+                        )
                     }) 
                 :  <p>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</p>}
 
@@ -100,4 +171,58 @@ const Conte = styled.div`
 
         color: #666666;
     }
+
+    .hab {
+        display: flex;
+        justify-content: space-between;
+        height: 91px;
+        width: 340px;
+        background-color: #FFFFFF;
+        border-radius: 5px;
+        .dias {
+            width: 200px;
+            height: 30px;
+            display: flex;
+            flex-direction: row;
+            align-items: space-between;
+        }
+    }
 `
+
+const Dia = styled.div`
+    margin-right: 3px;
+    font-family: 'Lexend Deca';
+    font-weight: 400;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    background-color: ${props => props.primary? '#FFFFFF' : '#CFCFCF'};
+    color: ${props => props.primary? '#DBDBDB' : '#FFFFFF'};
+`
+
+
+const ExcluirButton = ({ id }) => {
+    useEffect(() => {
+      const excluir = async () => {
+        try {
+          await axios.delete(
+            `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}`,
+            config
+          );
+          console.log("Hábito excluído com sucesso");
+        } catch (error) {
+          console.log("Erro ao excluir hábito:", error);
+        }
+      };
+  
+      excluir();
+    }, [id]);
+  
+    return (
+      <button onClick={() => console.log("Botão Excluir clicado")}>Excluir</button>
+    );
+  };
+  

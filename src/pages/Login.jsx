@@ -61,7 +61,7 @@ export default function Login() {
         <>
             <form onSubmit={setToken}>
                 <label>Email:</label>
-                <input disabled={load} value={email} onChange={alteraEmail} type="text" />
+                <input  data-test="email-input" disabled={load} value={email} onChange={alteraEmail} type="text" />
                 <label>Senha:</label>
                 <input disabled={load} value={senha} onChange={alteraSenha} type="text" />
                 {load ? <button disabled={load}><ThreeDots/></button> : <button>Login</button>}

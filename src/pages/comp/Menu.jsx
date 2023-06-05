@@ -7,7 +7,11 @@ export default function Menu({ perc }) {
     return (
         <Rodape>
             <Link to={'/habitos'}><p>Hábitos</p> </Link>
-            <CircularProgressbar value={perc} text="Hoje"/>    
+            <Link to={'/hoje'}>
+                <>
+                    <CircularProgressbar value={perc} text="Hoje"/>
+                </>
+            </Link>
             <p>Histórico</p>
         </Rodape>
     )

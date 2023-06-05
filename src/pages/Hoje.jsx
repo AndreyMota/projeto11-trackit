@@ -4,6 +4,7 @@ import { AuthContext } from "./Contexts/AuthContext";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { ThreeDots } from "react-loader-spinner";
+import axios from "axios";
 
 import dayjs from "dayjs";
 import 'dayjs/locale/pt-br'; // Importe a localização desejada
@@ -18,7 +19,11 @@ dayjs.extend(utc); // Adicione o plugin de UTC
 
 export default function Hoje() {
     const navigate = useNavigate();
-    const {user} = useContext(AuthContext);
+    const {user, pcem, aument} = useContext(AuthContext);
+    const [taxa, setTaxa] = useState();
+    const [config, setToken] = useState();
+    const [hab, setHab] = useState();
+    
     const now = dayjs();
     console.log(now);
 
@@ -27,12 +32,30 @@ export default function Hoje() {
 
     useEffect(() => {
         if (!user) {
-            navigate('/');
+            return;
+        } else {
+            setToken({
+                headers: {
+                    Authorization: `Bearer ${user.token}`
+                }
+            });
         }
         
-    }, [user, navigate]);
+    }, [user]);
+    
 
-    if (!user) {
+    useEffect(() => {
+        axios.get('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today', config)
+            .then((resp) => {
+                console.log(resp.data);
+                setHab(resp.data);
+            }) 
+            .catch((er) => {
+                console.log(er);
+            });
+    }, [config]);
+
+    if (!user || !hab) {
         return (
             <>
                 <ThreeDots />
@@ -45,9 +68,22 @@ export default function Hoje() {
             <Top rcs={user.image}/>
             <Conte>
                 <h1>{custoDate.format('dddd')}, {custoDate.date()}</h1>
-                <h2>Nenhum hábito concluído ainda</h2>
+                {(hab.length > 0)? 
+                    hab.map((x, y) => {
+                        return (
+                            <Hab>
+                                <div className="left">
+                                    <p>{x.name}</p>
+                                    Sua sequencia atual: {x.currentSequence} <br />
+                                    Seu recorde: {x.highestSequence}
+                                </div>
+                            </Hab>
+                        )
+                    }) 
+                :  <h2>Nenhum hábito concluído ainda</h2>}
+                
             </Conte>
-            <Menu perc={20}/>
+            <Menu perc={pcem}/>
         </>
     )
 }
@@ -79,4 +115,9 @@ const Conte = styled.div`
         margin-bottom: 28px;
     }
 `;
+
+const Hab = styled.div`
+    width: 340px;
+    height: 94px;
+`
 
